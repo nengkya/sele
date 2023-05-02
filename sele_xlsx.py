@@ -20,19 +20,28 @@ def test_eight_components():
 	title = driver.title
 	assert title == "Thai Customs"
 
-	text_box = driver.find_element(by=By.NAME, value="tariff_code")
+	f = open('230430 230430 HS Codes.txt')
 
-	text_box.send_keys("39011012000")
+	for x in f:
+		hs_code = f.readline()
 
-	WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
+		if hs_code not in ['PP', 'PP', '']:
 
-	#create action chain object
-	action = ActionChains(driver)
+			text_box = driver.find_element(by=By.NAME, value="tariff_code")
 
-	action.pause(10)
+			text_box.send_keys(hs_code)
 
-	#perform the operation
-	action.perform()	
+			WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
+
+			#create action chain object
+			action = ActionChains(driver)
+
+			action.pause(5)
+
+			#perform the operation
+			action.perform()
+
+	f.close()
 
 	driver.quit()
 
