@@ -1,19 +1,10 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
-#for input text in html form
 from selenium.webdriver.common.keys import Keys
-
-#click
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-#extract form submit result
-from bs4 import BeautifulSoup, SoupStrainer
-
-import pandas as pd
-import csv
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 def test_eight_components():
@@ -31,14 +22,19 @@ def test_eight_components():
 
 	text_box = driver.find_element(by=By.NAME, value="tariff_code")
 
-	hs_code = "39011012000"
+	text_box.send_keys("39011012000")
 
-	text_box.send_keys(hs_code)
+	WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
 
-	WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
+	#create action chain object
+	action = ActionChains(driver)
+
+	action.pause(10)
+
+	#perform the operation
+	action.perform()	
 
 	driver.quit()
-
 
 if __name__ == '__main__':
 	os.system('tput reset')
