@@ -2,7 +2,7 @@ import os
 from natsort import os_sorted
 
 #The directory sorted like your file browser might show
-somelist = os_sorted(os.listdir())
+somelist = os_sorted(os.listdir('/home/haga/Downloads'))
 
 approved = ['.xlsx']
 

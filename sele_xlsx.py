@@ -52,8 +52,21 @@ def test_eight_components():
 	somelist[:] = [url for url in somelist if any(sub in url for sub in approved)]
 
 	print(somelist)
-
 	####################
+
+	f = open("230430 230430 HS Codes.txt", "r")
+	i = 0
+
+	for hs_code in f:
+		hs_code = f.readline()
+
+		hs_code = hs_code.strip()
+
+		os.rename('/home/haga/Downloads/' + somelist[i], '/home/haga/Downloads/' + somelist[i] + " " + hs_code)
+
+		i += 1
+
+	f.close()
 
 	driver.quit()
 
