@@ -1,4 +1,6 @@
 import os
+import fnmatch
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -20,26 +22,32 @@ def test_eight_components():
 	title = driver.title
 	assert title == "Thai Customs"
 
-	f = open('230430 230430 HS Codes.txt')
+	f = open("230430 230430 HS Codes.txt", "r")
 
-	for x in f:
+	for hs_code in f:
 		hs_code = f.readline()
 
-		if hs_code not in ['PP', 'PP', '']:
+		text_box = driver.find_element(by=By.NAME, value="tariff_code")
 
-			text_box = driver.find_element(by=By.NAME, value="tariff_code")
+		text_box.send_keys(hs_code)
 
-			text_box.send_keys(hs_code)
+		WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
 
-			WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[2]"))).click()
+		#create action chain object
+		action = ActionChains(driver)
 
-			#create action chain object
-			action = ActionChains(driver)
+		action.pause(1)
 
-			action.pause(5)
+		#perform the operation
+		action.perform()
 
-			#perform the operation
-			action.perform()
+		'''
+		hs_code = hs_code.strip()
+
+		for file in os.listdir('/home/haga/Downloads'):
+			if fnmatch.fnmatch(file, 'Statistic*'):
+				os.rename('/home/haga/Downloads/' + file, '/home/haga/Downloads/' + hs_code + " " + file)
+		'''
 
 	f.close()
 
