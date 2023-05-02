@@ -1,5 +1,5 @@
 import os
-import fnmatch
+from natsort import os_sorted
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -41,15 +41,19 @@ def test_eight_components():
 		#perform the operation
 		action.perform()
 
-		'''
-		hs_code = hs_code.strip()
-
-		for file in os.listdir('/home/haga/Downloads'):
-			if fnmatch.fnmatch(file, 'Statistic*'):
-				os.rename('/home/haga/Downloads/' + file, '/home/haga/Downloads/' + hs_code + " " + file)
-		'''
-
 	f.close()
+
+	####################
+	#The directory sorted like your file browser might show
+	somelist = os_sorted(os.listdir('/home/haga/Downloads'))
+
+	approved = ['.xlsx']
+
+	somelist[:] = [url for url in somelist if any(sub in url for sub in approved)]
+
+	print(somelist)
+
+	####################
 
 	driver.quit()
 

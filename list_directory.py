@@ -6,7 +6,6 @@ somelist = os_sorted(os.listdir())
 
 approved = ['.xlsx']
 
-
 somelist[:] = [url for url in somelist if any(sub in url for sub in approved)]
 
 print(somelist)
