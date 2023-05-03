@@ -41,32 +41,33 @@ class Se:
 					text_box2 = driver.find_element(by=By.NAME, value="imex_type")
 					text_box2.send_keys(Keys.ARROW_UP)
 
+				year  = ['2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023']
 				month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-				for x in range(12):
+				for y in range(0, 12):
+					select_year = Select(driver.find_element(by=By.NAME, value='year'))
+					select_year.select_by_index(y)
+					for x in range(12):
+						select_month = Select(driver.find_element(by=By.NAME, value='month'))
+						select_month.select_by_index(x)
 
-					select = Select(driver.find_element(by=By.NAME, value='month'))
+						WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
+						soup  = BeautifulSoup(driver.page_source, features = "html.parser")
 
-					select.select_by_index(x)
+						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
+						rows = df_pandas[2].values.tolist()
 
-					WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
-
-					soup  = BeautifulSoup(driver.page_source, features = "html.parser")
-
-					df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
-					rows = df_pandas[2].values.tolist()
-
-					filename = ie + " " + month[x] + ' ' + hs_code.strip() + '.csv'
-						
-					#writing to csv file 
-					with open(filename, 'w') as csvfile: 
-						#creating a csv writer object 
-						csvwriter = csv.writer(csvfile)
-						#write head
-						csvwriter.writerow(list(df_pandas[2]))
-						#writing the data rows
-						for i in range(0, len(rows)):
-							csvwriter.writerow(rows[i])
+						filename = ie + ' ' + str(2023 - y) + " " + month[x] + ' ' + hs_code.strip() + '.csv'
+							
+						#writing to csv file 
+						with open(filename, 'w') as csvfile: 
+							#creating a csv writer object 
+							csvwriter = csv.writer(csvfile)
+							#write head
+							csvwriter.writerow(list(df_pandas[2]))
+							#writing the data rows
+							for i in range(0, len(rows)):
+								csvwriter.writerow(rows[i])
 		f.close()
 		driver.quit()
 
