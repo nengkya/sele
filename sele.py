@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 
 
 class Se:
@@ -31,6 +32,10 @@ class Se:
 
 			text_box.send_keys(hs_code)
 
+			text_box2 = driver.find_element(by=By.NAME, value="imex_type")
+
+			text_box2.send_keys(Keys.ARROW_DOWN)
+
 			WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
 
 			soup = BeautifulSoup(driver.page_source, features = "html.parser")
@@ -39,13 +44,19 @@ class Se:
 
 			rows = df_pandas[2].values.tolist()
 
-			filename = hs_code.strip() + '.csv'
+			a_tab = SoupStrainer('li',{'class': 'active'})
+			soup1 = BeautifulSoup(driver.page_source, features = "html.parser", parseOnlyThese = a_tab)
+			a = soup1.find('a')
+
+			filename = hs_code.strip() + ".csv"
 				
 			#writing to csv file 
 			with open(filename, 'w') as csvfile: 
 				#creating a csv writer object 
 				csvwriter = csv.writer(csvfile) 
+
 				csvwriter.writerow(list(df_pandas[2]))
+					
 				#writing the data rows
 				for i in range(0, len(rows)):
 					csvwriter.writerow(rows[i])
@@ -53,7 +64,7 @@ class Se:
 		f.close()
 		driver.quit()
 
-
 if __name__ == '__main__':
 	os.system('tput reset')
+
 	Se.components()
