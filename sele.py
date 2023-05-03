@@ -41,23 +41,32 @@ class Se:
 					text_box2 = driver.find_element(by=By.NAME, value="imex_type")
 					text_box2.send_keys(Keys.ARROW_UP)
 
-				WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
+				month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-				soup = BeautifulSoup(driver.page_source, features = "html.parser")
-				df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
-				rows = df_pandas[2].values.tolist()
+				for x in range(12):
 
-				filename = ie + " " + hs_code.strip() + '.csv'
-					
-				#writing to csv file 
-				with open(filename, 'w') as csvfile: 
-					#creating a csv writer object 
-					csvwriter = csv.writer(csvfile)
-					#write head
-					csvwriter.writerow(list(df_pandas[2]))
-					#writing the data rows
-					for i in range(0, len(rows)):
-						csvwriter.writerow(rows[i])
+					select = Select(driver.find_element(by=By.NAME, value='month'))
+
+					select.select_by_index(x)
+
+					WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
+
+					soup  = BeautifulSoup(driver.page_source, features = "html.parser")
+
+					df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
+					rows = df_pandas[2].values.tolist()
+
+					filename = ie + " " + month[x] + ' ' + hs_code.strip() + '.csv'
+						
+					#writing to csv file 
+					with open(filename, 'w') as csvfile: 
+						#creating a csv writer object 
+						csvwriter = csv.writer(csvfile)
+						#write head
+						csvwriter.writerow(list(df_pandas[2]))
+						#writing the data rows
+						for i in range(0, len(rows)):
+							csvwriter.writerow(rows[i])
 		f.close()
 		driver.quit()
 
