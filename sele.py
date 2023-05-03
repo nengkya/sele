@@ -12,7 +12,10 @@ from selenium.webdriver.support.ui import Select
 
 
 class Se:
-	def components():
+	def __init__(self):
+		pass
+
+	def components(self):
 		options = webdriver.EdgeOptions()
 		options.add_argument("start-maximized");
 		options.add_argument("disable-infobars")
@@ -23,48 +26,44 @@ class Se:
 		assert title == "Thai Customs"
 
 		f = open("230430 230430 HS Codes.txt", "r")
-
 		for hs_code in f:
-
 			hs_code = f.readline()
+			imex = ['import', 'export']
 
-			text_box = driver.find_element(by=By.NAME, value="tariff_code")
+			for ie in imex:
+				text_box = driver.find_element(by=By.NAME, value="tariff_code")
+				text_box.send_keys(hs_code)
 
-			text_box.send_keys(hs_code)
+				if ie == 'export':
+					text_box2 = driver.find_element(by=By.NAME, value="imex_type")
+					text_box2.send_keys(Keys.ARROW_DOWN)
+				else:
+					text_box2 = driver.find_element(by=By.NAME, value="imex_type")
+					text_box2.send_keys(Keys.ARROW_UP)
 
-			text_box2 = driver.find_element(by=By.NAME, value="imex_type")
+				WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
 
-			text_box2.send_keys(Keys.ARROW_DOWN)
+				soup = BeautifulSoup(driver.page_source, features = "html.parser")
+				df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
+				rows = df_pandas[2].values.tolist()
 
-			WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
-
-			soup = BeautifulSoup(driver.page_source, features = "html.parser")
-
-			df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
-
-			rows = df_pandas[2].values.tolist()
-
-			a_tab = SoupStrainer('li',{'class': 'active'})
-			soup1 = BeautifulSoup(driver.page_source, features = "html.parser", parseOnlyThese = a_tab)
-			a = soup1.find('a')
-
-			filename = hs_code.strip() + ".csv"
-				
-			#writing to csv file 
-			with open(filename, 'w') as csvfile: 
-				#creating a csv writer object 
-				csvwriter = csv.writer(csvfile) 
-
-				csvwriter.writerow(list(df_pandas[2]))
+				filename = ie + " " + hs_code.strip() + '.csv'
 					
-				#writing the data rows
-				for i in range(0, len(rows)):
-					csvwriter.writerow(rows[i])
-
+				#writing to csv file 
+				with open(filename, 'w') as csvfile: 
+					#creating a csv writer object 
+					csvwriter = csv.writer(csvfile)
+					#write head
+					csvwriter.writerow(list(df_pandas[2]))
+					#writing the data rows
+					for i in range(0, len(rows)):
+						csvwriter.writerow(rows[i])
 		f.close()
 		driver.quit()
+
 
 if __name__ == '__main__':
 	os.system('tput reset')
 
-	Se.components()
+	se = Se()
+	se.components()
