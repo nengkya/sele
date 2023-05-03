@@ -39,13 +39,19 @@ class Se:
 
 			rows = df_pandas[2].values.tolist()
 
-			filename = hs_code.strip() + '.csv'
+			a_tab = SoupStrainer('li',{'class': 'active'})
+			soup1 = BeautifulSoup(driver.page_source, features = "html.parser", parseOnlyThese = a_tab)
+			a = soup1.find('a')
+
+			filename = hs_code.strip() + ".csv"
 				
 			#writing to csv file 
 			with open(filename, 'w') as csvfile: 
 				#creating a csv writer object 
 				csvwriter = csv.writer(csvfile) 
+
 				csvwriter.writerow(list(df_pandas[2]))
+					
 				#writing the data rows
 				for i in range(0, len(rows)):
 					csvwriter.writerow(rows[i])
@@ -53,7 +59,7 @@ class Se:
 		f.close()
 		driver.quit()
 
-
 if __name__ == '__main__':
 	os.system('tput reset')
+
 	Se.components()
