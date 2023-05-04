@@ -41,7 +41,7 @@ class Se:
 					text_box2 = driver.find_element(by=By.NAME, value="imex_type")
 					text_box2.send_keys(Keys.ARROW_UP)
 
-				year  = ['2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023']
+				year = ['2023','2022','2021','2020','2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004','2003','2002','2001']
 				month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 				for y in range(0, 12):
@@ -54,10 +54,12 @@ class Se:
 						WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
 						soup  = BeautifulSoup(driver.page_source, features = "html.parser")
 
-						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'},flavor='html5lib')
+						#The default of None tries to use lxml to parse and if that fails it falls back on bs4 + html5lib.
+						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'}, flavor='html5lib')
+
 						rows = df_pandas[2].values.tolist()
 
-						filename = ie + ' ' + str(2023 - y) + " " + month[x] + ' ' + hs_code.strip() + '.csv'
+						filename = ie + ' ' + year[y] + " " + month[x] + ' ' + hs_code.strip() + '.csv'
 							
 						#writing to csv file 
 						with open(filename, 'w') as csvfile: 
