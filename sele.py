@@ -44,6 +44,7 @@ class Se:
 				year = ['2023','2022','2021','2020','2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004','2003','2002','2001']
 				month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
+				#https://stackoverflow.com/questions/32382415/selenium-python-select
 				for y in range(1, 12):
 					select_year = Select(driver.find_element(by=By.NAME, value='year'))
 					select_year.select_by_index(y)
