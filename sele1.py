@@ -30,7 +30,7 @@ class Se:
 			hs_code = f.readline()
 			imex = ['import', 'export']
 
-			for ie in imex:
+			for ie in reversed(imex):
 				text_box = driver.find_element(by=By.NAME, value="tariff_code")
 				text_box.send_keys(hs_code)
 
