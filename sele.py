@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import csv
 
-from bs4 import BeautifulSoup, SoupStrainer
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -53,7 +52,7 @@ class Se:
 						select_month.select_by_index(x)
 
 						WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH, "/html/body/form[1]/div[3]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[7]/td[2]/button[1]"))).click()
-						soup  = BeautifulSoup(driver.page_source, features = "html.parser")
+						#soup  = BeautifulSoup(driver.page_source, features = "html.parser")
 
 						#The default of None tries to use lxml to parse and if that fails it falls back on bs4 + html5lib.
 						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'}, flavor='html5lib')
