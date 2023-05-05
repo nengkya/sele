@@ -55,7 +55,7 @@ class Se:
 						#soup  = BeautifulSoup(driver.page_source, features = "html.parser")
 
 						#The default of None tries to use lxml to parse and if that fails it falls back on bs4 + html5lib.
-						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'}, flavor='html5lib')
+						df_pandas=pd.read_html(driver.page_source, attrs={'class':'table-bordered'}, header = 2, flavor='html5lib')
 
 						rows = df_pandas[2].values.tolist()
 
